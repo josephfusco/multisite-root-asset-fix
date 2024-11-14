@@ -13,5 +13,10 @@
         "multisite",
         "assets",
         "url-fix"
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
 }

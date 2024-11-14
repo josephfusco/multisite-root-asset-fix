@@ -1,4 +1,4 @@
-# Multisite Root Asset URL Fix
+# Multisite Root Asset Fix
 
 Fixes broken assets, media, and ACF fields in WordPress multisite subdirectory installations by ensuring all subsites load assets from the main site URL.
 
@@ -9,6 +9,14 @@ Fixes broken assets, media, and ACF fields in WordPress multisite subdirectory i
 - WordPress Multisite with subdirectories (not subdomains)
 
 ## Installation
+
+### Via Composer (recommended)
+
+```bash
+composer require josephfusco/multisite-root-asset-fix
+```
+
+### Manual Installation
 
 1. Upload to `/wp-content/plugins/`
 2. Network Activate through 'Network Admin > Plugins'

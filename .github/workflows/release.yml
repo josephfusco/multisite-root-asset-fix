@@ -46,7 +46,6 @@ jobs:
           mkdir build
           
           # Copy only the files we want in the release
-          cp -r includes build/
           cp multisite-root-asset-fix.php build/
           cp README.md build/
           cp LICENSE.md build/

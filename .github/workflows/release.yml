@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, mysql
+          coverage: none
+          tools: composer:v2
+          
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+          
+      - name: Install dependencies
+        run: composer install --no-dev --prefer-dist --no-progress
+        
+      - name: Create plugin archive
+        run: |
+          # Create temporary directory for building
+          mkdir build
+          
+          # Copy only the files we want in the release
+          cp -r includes build/
+          cp multisite-root-asset-fix.php build/
+          cp README.md build/
+          cp LICENSE.md build/
+          
+          # Create the zip from the build directory
+          cd build
+          zip -r ../multisite-root-asset-fix.zip .
+          cd ..
+          
+          # Clean up
+          rm -rf build
+          
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: multisite-root-asset-fix.zip
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ACF Multisite Sync ${{ steps.get_version.outputs.VERSION }}
+            
+            This release includes:
+            - Initial plugin release
+            - Synchronization of ACF field groups across multisite
+            - Support for both ACF Free and Pro versions
+            - WordPress VIP compatibility
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

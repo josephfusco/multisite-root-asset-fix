@@ -1,0 +1,24 @@
+{
+    "name": "josephfusco/multisite-root-asset-fix",
+    "description": "WordPress plugin to fix asset URLs in multisite subdirectory installations",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.2",
+        "composer/installers": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "classmap": ["multisite-root-asset-fix.php"]
+    },
+    "keywords": [
+        "wordpress",
+        "wordpress-plugin",
+        "multisite",
+        "assets",
+        "url-fix"
+    ],
+    "minimum-stability": "stable"
+}
